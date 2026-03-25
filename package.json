@@ -1,0 +1,26 @@
+{
+  "name": "pokemon",
+  "version": "1.0.0",
+  "description": "宝可梦对战游戏 - 支持键盘操控和联机对战",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/battle.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lmy-hzl/pokemon.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lmy-hzl/pokemon/issues"
+  },
+  "homepage": "https://github.com/lmy-hzl/pokemon#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  }
+}
