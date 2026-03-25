@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>宝可梦对战</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== LOBBY SCREEN ===== -->
+<div id="screen-lobby" class="screen active">
+  <div class="title-box">
+    <div class="title-sprite">⚡</div>
+    <h1 class="game-title">宝可梦对战</h1>
+    <p class="game-subtitle">Pokemon Battle Online</p>
+  </div>
+  <div class="lobby-buttons">
+    <button id="btn-create" class="btn btn-primary" data-key="1">
+      <span class="key-hint">1</span> 创建房间
+    </button>
+    <button id="btn-join" class="btn btn-secondary" data-key="2">
+      <span class="key-hint">2</span> 加入房间
+    </button>
+  </div>
+  <div id="join-form" class="join-form hidden">
+    <label for="room-input">房间号：</label>
+    <input id="room-input" type="text" maxlength="5" placeholder="输入5位房间号" autocomplete="off" />
+    <button id="btn-join-confirm" class="btn btn-confirm">确认 (Enter)</button>
+  </div>
+  <div id="lobby-status" class="status-message"></div>
+  <div class="key-help">
+    <p>键盘快捷键：<kbd>1</kbd> 创建 &nbsp; <kbd>2</kbd> 加入</p>
+  </div>
+</div>
+
+<!-- ===== WAITING SCREEN ===== -->
+<div id="screen-waiting" class="screen">
+  <div class="waiting-box">
+    <div class="waiting-spinner">⚡</div>
+    <h2 id="waiting-title">等待对手加入</h2>
+    <div id="room-display" class="room-display">
+      房间号：<span id="room-code" class="room-code">-----</span>
+    </div>
+    <p id="waiting-message" class="waiting-message">将房间号分享给你的朋友</p>
+  </div>
+</div>
+
+<!-- ===== POKEMON SELECT SCREEN ===== -->
+<div id="screen-select" class="screen">
+  <h2 class="select-title">选择你的宝可梦</h2>
+  <p class="select-hint">← → 选择 &nbsp; Enter 确认 &nbsp; 或直接点击</p>
+  <div id="pokemon-grid" class="pokemon-grid"></div>
+  <div id="pokemon-detail" class="pokemon-detail hidden">
+    <div class="detail-header">
+      <span id="detail-sprite" class="detail-sprite"></span>
+      <div>
+        <h3 id="detail-name"></h3>
+        <div id="detail-types" class="type-tags"></div>
+      </div>
+    </div>
+    <div class="detail-stats">
+      <div class="stat-row"><span>HP</span><div class="stat-bar"><div id="stat-hp" class="stat-fill hp"></div></div><span id="stat-hp-val"></span></div>
+      <div class="stat-row"><span>攻击</span><div class="stat-bar"><div id="stat-atk" class="stat-fill atk"></div></div><span id="stat-atk-val"></span></div>
+      <div class="stat-row"><span>防御</span><div class="stat-bar"><div id="stat-def" class="stat-fill def"></div></div><span id="stat-def-val"></span></div>
+      <div class="stat-row"><span>速度</span><div class="stat-bar"><div id="stat-spd" class="stat-fill spd"></div></div><span id="stat-spd-val"></span></div>
+    </div>
+    <div id="detail-moves" class="detail-moves"></div>
+  </div>
+  <div id="select-status" class="status-message"></div>
+</div>
+
+<!-- ===== BATTLE SCREEN ===== -->
+<div id="screen-battle" class="screen">
+  <div class="battle-arena">
+    <!-- Opponent -->
+    <div class="battle-side opponent-side">
+      <div class="battle-info">
+        <div class="pokemon-name-row">
+          <span id="opp-name" class="battle-pokemon-name"></span>
+          <span id="opp-status" class="status-badge hidden"></span>
+        </div>
+        <div class="hp-bar-wrapper">
+          <div class="hp-bar"><div id="opp-hp-fill" class="hp-fill"></div></div>
+          <span id="opp-hp-text" class="hp-text"></span>
+        </div>
+        <div id="opp-type" class="type-tags small"></div>
+      </div>
+      <div id="opp-sprite" class="battle-sprite opponent-sprite"></div>
+    </div>
+
+    <!-- Player -->
+    <div class="battle-side player-side">
+      <div id="player-sprite" class="battle-sprite player-sprite"></div>
+      <div class="battle-info">
+        <div class="pokemon-name-row">
+          <span id="player-name" class="battle-pokemon-name"></span>
+          <span id="player-status" class="status-badge hidden"></span>
+        </div>
+        <div class="hp-bar-wrapper">
+          <div class="hp-bar"><div id="player-hp-fill" class="hp-fill"></div></div>
+          <span id="player-hp-text" class="hp-text"></span>
+        </div>
+        <div id="player-type" class="type-tags small"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Battle Log -->
+  <div id="battle-log" class="battle-log">
+    <div id="log-entries"></div>
+  </div>
+
+  <!-- Move Panel -->
+  <div id="move-panel" class="move-panel">
+    <div class="move-hint">选择技能（<kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> 或方向键+Enter）</div>
+    <div id="move-buttons" class="move-buttons"></div>
+    <div id="move-wait-msg" class="move-wait-msg hidden">等待对手出招...</div>
+  </div>
+
+  <!-- Battle Over Panel -->
+  <div id="battle-over-panel" class="battle-over-panel hidden">
+    <div id="battle-result-text" class="battle-result-text"></div>
+    <div class="over-buttons">
+      <button id="btn-rematch" class="btn btn-primary"><span class="key-hint">R</span> 再来一局</button>
+      <button id="btn-lobby" class="btn btn-secondary"><span class="key-hint">Q</span> 返回大厅</button>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
